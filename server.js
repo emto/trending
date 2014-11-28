@@ -77,45 +77,8 @@ router.route('/checkin')
         var x = businesses;
         var y = checkins;
         res.send([x,y]);
-
-        
-
-
-        // Swatch.find(function(err, swatches) {
-        //     if (err) {
-        //         res.send(err);
-        //     } else {
-        //         res.json(swatches);
-        //     }
-        // });
     });
-//     .post(function(req, res) {
-//         var swatch = new Swatch();
-//         swatch.name = req.body.name;
-//         swatch.blurb = req.body.blurb;
-//         swatch.links = req.body.links;
-//         swatch.color = req.body.color;
-//         swatch._id = shortId.generate();
 
-//         swatch.save(function(err) {
-//             if (err) {
-//                 res.send(err);
-//             } else {
-//                 res.json({ swatchID: swatch._id });
-//             }
-//         });
-//     });
-
-// router.route('/swatches/:swatchid')
-//     .get(function(req,res) {
-//         Swatch.findById(req.params.swatchid, function(err, swatch) {
-//             if (err) {
-//                 res.send(err);
-//             } else {
-//                 res.json(swatch);
-//             }
-//         });
-//     });
 
 app.use('/api', router);
 
