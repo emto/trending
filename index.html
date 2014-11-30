@@ -19,11 +19,39 @@
         padding: 5px;
         border: 1px solid #999;
       }
+      #sidebar {
+        position: absolute;
+        height: 100%;
+        width: 20%;
+        float: left;
+        background-color: #fff;
+      }
     </style>
+    <script language="javascript" type="text/javascript" src="server.js"></script>
     <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&libraries=visualization"></script>
+    <script language="javascript" type="text/javascript" src="jquery-1.10.2.min.js"></script>
+
     <script>
-// Adding 500 Data Points
+
+//Adding 500 Data Points
 var map, pointarray, heatmap;
+
+var request = new XMLHttpRequest();
+
+request.open("GET","/api/checkin/",true);
+request.send();
+
+var busData = []
+
+request.onreadystatechange = function() {
+    if (request.readyState == 4 && (request.status == 200)) {
+        var data = JSON.parse(request.responseText);
+        busData = data;
+        console.log(busData);
+    }
+}
+
+
 
 var taxiData = [
   new google.maps.LatLng(37.782551, -122.445368),
@@ -590,6 +618,9 @@ google.maps.event.addDomListener(window, 'load', initialize);
       <button onclick="changeGradient()">Change gradient</button>
       <button onclick="changeRadius()">Change radius</button>
       <button onclick="changeOpacity()">Change opacity</button>
+    </div>
+    <div id="sidebar">
+      Yelp Trending
     </div>
     <div id="map-canvas"></div>
   </body>

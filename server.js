@@ -6,37 +6,51 @@ var app                 = express(); //create server
 
 var fs = require('fs');
 
-var bus = fs.readFileSync('./yelp_academic_dataset_business.json', 'utf8', function (err,data) {
+var busData = fs.readFileSync('./yelp_academic_dataset_business.json', 'utf8', function (err,data) {
+  if (err) {
+    // return console.log(err);
+  }
+  console.log(data);
+});
+
+var checkData = fs.readFileSync('./yelp_academic_dataset_checkin.json', 'utf8', function (err,data) {
   if (err) {
     return console.log(err);
   }
   // console.log(data);
 });
 
-var check = fs.readFileSync('./yelp_academic_dataset_checkin.json', 'utf8', function (err,data) {
-  if (err) {
-    return console.log(err);
-  }
-  // console.log(data);
-});
+var businesses = {};
 
-var businesses = [];
-
-var busString = bus.split("\n");
+var busString = busData.split("\n");
 for (var i= 0; i < busString.length - 1; i++) {
-    var hello = JSON.parse(busString[i]);
-    businesses.push(hello);
-
+    var bus = JSON.parse(busString[i]);
+    var data = {};
+    data["name"] = bus["name"];
+    data["coords"] = [bus["latitude"], bus["longitude"]];
+    data["stars"] = bus["stars"];
+    data["tags"] = bus["categories"];
+    data["addr"] = bus["full_address"];
+    data["rvwCt"] = bus["review_count"];
+    businesses[bus["business_id"]] = data
 }
 
-var checkins = [];
+var busCheckData = [];
 
-var checkString = check.split("\n");
+var checkString = checkData.split("\n");
 for (var i= 0; i < checkString.length - 1; i++) {
-    var hi = JSON.parse(checkString[i]);
-    checkins.push(hi);
-
+    var check = JSON.parse(checkString[i]);
+    var busID = check["business_id"];
+    var chkCt = 0;
+    for (var x in check["checkin_info"]) {
+      chkCt += check["checkin_info"][x];
+    }
+    data = businesses[busID];
+    data["chkCt"] = chkCt;
+    busCheckData.push(data);
 }
+
+
 
 // console.log('Require:', parseBus);
 // var parseCheck = require('./yelp_academic_dataset_checkin.json');
@@ -74,9 +88,8 @@ function getCheckIn(busid) {
 
 router.route('/checkin')
     .get(function(req, res) {
-        var x = businesses;
-        var y = checkins;
-        res.send([x,y]);
+        var x = busCheckData;
+        res.send(x);
     });
 
 
