@@ -7,17 +7,17 @@ var app                 = express(); //create server
 var fs = require('fs');
 
 var busData = fs.readFileSync('./yelp_academic_dataset_business.json', 'utf8', function (err,data) {
-  if (err) {
-    // return console.log(err);
-  }
-  console.log(data);
+    if (err) {
+        // return console.log(err);
+    }
+    console.log(data);
 });
 
 var checkData = fs.readFileSync('./yelp_academic_dataset_checkin.json', 'utf8', function (err,data) {
-  if (err) {
-    return console.log(err);
-  }
-  // console.log(data);
+    if (err) {
+        return console.log(err);
+    }
+    // console.log(data);
 });
 
 var businesses = {};
@@ -43,7 +43,7 @@ for (var i= 0; i < checkString.length - 1; i++) {
     var busID = check["business_id"];
     var chkCt = 0;
     for (var x in check["checkin_info"]) {
-      chkCt += check["checkin_info"][x];
+        chkCt += check["checkin_info"][x];
     }
     data = businesses[busID];
     data["chkCt"] = chkCt;
@@ -82,15 +82,15 @@ router.use(function(req, res, next) {
 
 function getCheckIn(busid) {
     return checkins.filter(
-        function(checkins) {return checkins.business_id == busid}
-        );
+            function(checkins) {return checkins.business_id == busid}
+            );
 }
 
 router.route('/checkin')
-    .get(function(req, res) {
-        var x = busCheckData;
-        res.send(x);
-    });
+.get(function(req, res) {
+    var x = busCheckData;
+    res.send(x);
+});
 
 
 app.use('/api', router);
