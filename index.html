@@ -7,66 +7,92 @@
 <script type="text/javascript"
   src="https://maps.googleapis.com/maps/api/js?libraries=visualization&sensor=true_or_false">
 </script>
+<link href='http://fonts.googleapis.com/css?family=Crete+Round' rel='stylesheet' type='text/css'>
+<link href='http://fonts.googleapis.com/css?family=Roboto:300' rel='stylesheet' type='text/css'>
 <style>
-html, body, #map-canvas {
-    height: 100%;
-    margin: 0px;
-    padding: 0px;
-    overflow: hidden;
-    font-family: Helvetica, sans-serif;
-}
-#sidebar {
-    text-align: center;
-    position: relative;
-    background-color: #fff;
-    width: 30%;
-    float: right;
-    top: 0;
-    bottom:0;
-    overflow-x: hidden;
-}
-#header {
-  padding-top:0.5em;
-  padding-bottom:0.5em;
-  background-color:#c41200;
-  color:#fff;
-}
-#markers {
-  padding-left:1em;
-  padding-top:1em;
-  padding-bottom:1em;
-  text-align:left;
-}
-#panel {
-    position: absolute;
-    top: 5px;
-    left: 50%;
-    margin-left: -180px;
-    z-index: 5;
-    background-color: #fff;
-    padding: 5px;
-    border: 1px solid #999;
-}
-.relative{
-  position:relative;
-  overflow-x:hidden;
-}
-h1{font-size:21px;}
+  html, body, #map-canvas {
+      height: 100%;
+      margin: 0px;
+      padding: 0px;
+      overflow: hidden;
+      font-family: 'Roboto';
+      font-weight: 300;
+      color: #fff;
+  }
+  #sidebar {
+      text-align: center;
+      position: relative;
+      background-color: #439ed1;
+      width: 30%;
+      height: 100%;
+      float: right;
+      top: 0;
+      bottom:0;
+      overflow-x: hidden;
+  }
+  #header {
+    padding-top:0.5em;
+    padding-bottom:0.5em;
 
-.styled-select select {
-   width: 268px;
-   padding: 5px;
-   font-size: 16px;
-   line-height: 1;
-   border: 0;
-   border-radius: 4px;
-   height: 40px;
-}
+  }
+  #markers {
+    padding-left:1em;
+    padding-top:1em;
+    padding-bottom:1em;
+    text-align:left;
+  }
+  #panel {
+      position: absolute;
+      top: 5px;
+      left: 50%;
+      margin-left: -180px;
+      z-index: 5;
+      background-color: #fff;
+      padding: 5px;
+      border: 1px solid #999;
+  }
+  .relative{
+    position:relative;
+    overflow-x:hidden;
+  }
+  h1{font-size:21px;}
 
-.fullwidth {
-  margin: 30px 0px;
-  width: 70%;
-}
+  .styled-select select {
+     width: 268px;
+     padding: 5px;
+     font-size: 16px;
+     line-height: 1;
+     border: 0;
+     border-radius: 4px;
+     height: 40px;
+     margin: 10px 0px;
+  }
+
+  .fullwidth {
+    margin: 10px 0px;
+    width: 70%;
+  }
+
+  .rangeslider {
+    margin-top: 50px;
+  }
+
+  .logo-box {
+    border-width: 6px;
+    border-style: solid;
+    border-color: #fff;
+    height: 60px;
+    width: 280px;
+    margin-left: 40px;
+    padding-bottom: 10px;
+  }
+
+  .logo-text {
+
+    font-family: 'Crete Round', serif;
+    font-size: 50px;
+    color: #fff;
+  }
 
 </style>
 
@@ -101,7 +127,7 @@ request.onreadystatechange = function() {
             heatmapData.push(point);
         }
         map = new google.maps.Map(document.getElementById("map-canvas"), {
-          center: new google.maps.LatLng(mapCenter[0], mapCenter[1]),
+          center: new google.maps.LatLng(36.109805026680903, -115.174355506897),
           zoom: 14,
           mapTypeId: google.maps.MapTypeId.MAP
         });
@@ -130,11 +156,17 @@ function showValue(newValue) {
 </div> -->
 <div id="sidebar">
     <div id="header">
-      <h1>Yelp Trending</h2>
+      <div class="logo-box">
+        <div class="logo-text">
+          trending
+        </div>
+      </div>
     </div>
     <div id="markers">
-      <b>Filter markers by:</b>
+      Filter markers by:
     </div>
+
+    Day of the week:
     <div class="styled-select">
       <select>
         <option value="1">Sunday</option>
@@ -147,7 +179,9 @@ function showValue(newValue) {
       </select>
     </div>
     <div class = "rangeslider">
+      <span class="range-select">Universal time selector:</span>
       <input type="range" class = "fullwidth" min="0" max="23" value="12" step="1" onchange="showValue(this.value)" />
+      <br>
       <span id="range">12</span>
     </div>
 </div>
