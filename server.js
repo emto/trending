@@ -8,15 +8,17 @@ var fs = require('fs');
 
 var busData = fs.readFileSync('./yelp_academic_dataset_business.json', 'utf8', function (err,data) {
     if (err) {
-        // return console.log(err);
+        response.end();
     }
     console.log(data);
+    response.end();
 });
 
 var checkData = fs.readFileSync('./yelp_academic_dataset_checkin.json', 'utf8', function (err,data) {
     if (err) {
-        return console.log(err);
+        response.end()
     }
+    response.end();
     // console.log(data);
 });
 
@@ -32,7 +34,7 @@ for (var i= 0; i < busString.length - 1; i++) {
     data["tags"] = bus["categories"];
     data["addr"] = bus["full_address"];
     data["rvwCt"] = bus["review_count"];
-    businesses[bus["business_id"]] = data
+    businesses[bus["business_id"]] = data;
 }
 
 var busCheckData = [];
@@ -48,6 +50,12 @@ for (var i= 0; i < checkString.length - 1; i++) {
     data = businesses[busID];
     data["chkCt"] = chkCt;
     busCheckData.push(data);
+}
+
+var checkTime = [];
+for (var i= 0; i < checkString.length - 1; i++) {
+    var check = JSON.parse(checkString[i]);
+    checkTime.push(check);
 }
 
 
@@ -91,6 +99,13 @@ router.route('/checkin')
     var x = busCheckData;
     res.send(x);
 });
+
+router.route('/checktime')
+.get(function(req, res) {
+    var y = checkTime[1];
+    res.send(y);
+});
+
 
 
 app.use('/api', router);

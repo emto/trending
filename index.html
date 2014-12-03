@@ -109,6 +109,7 @@ var busData = [];
 var heatmapData = [];
 var highestChkCt = 0;
 var mapCenter;
+var timeRange;
 
 request.onreadystatechange = function() {
     if (request.readyState == 4 && (request.status == 200)) {
@@ -141,9 +142,29 @@ request.onreadystatechange = function() {
     }
 }
 
+
+var request1 = new XMLHttpRequest();
+
+request1.open("GET","/api/checktime/",true);
+request1.send();
+
+var checkData;
+
+request1.onreadystatechange = function() {
+    if (request.readyState == 4 && (request.status == 200)) {
+        var data = JSON.parse(request.responseText);
+        checkData = data;
+    }
+}
+
+
 function showValue(newValue) {
   document.getElementById("range").innerHTML=newValue;
+  timeRange = newValue;
 }
+
+
+
 </script>
 
 </head>
@@ -168,7 +189,7 @@ function showValue(newValue) {
 
     Day of the week:
     <div class="styled-select">
-      <select>
+      <select class="filterby">
         <option value="1">Sunday</option>
         <option value="2">Monday</option>
         <option value="3">Tuesday</option>
