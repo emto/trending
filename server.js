@@ -16,7 +16,7 @@ var busData = fs.readFileSync('./yelp_academic_dataset_business.json', 'utf8', f
 
 var checkData = fs.readFileSync('./yelp_academic_dataset_checkin.json', 'utf8', function (err,data) {
     if (err) {
-        response.end()
+        response.end();
     }
     response.end();
     // console.log(data);

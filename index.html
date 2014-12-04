@@ -8,7 +8,7 @@
   src="https://maps.googleapis.com/maps/api/js?libraries=visualization&sensor=true_or_false">
 </script>
 <link href='http://fonts.googleapis.com/css?family=Crete+Round' rel='stylesheet' type='text/css'>
-<link href='http://fonts.googleapis.com/css?family=Roboto:300' rel='stylesheet' type='text/css'>
+<link href='http://fonts.googleapis.com/css?family=Roboto:300,500' rel='stylesheet' type='text/css'>
 <style>
   html, body, #map-canvas {
       height: 100%;
@@ -21,25 +21,30 @@
   }
   #sidebar {
       text-align: center;
+      font-size:18px;
       position: relative;
       background-color: #439ed1;
-      width: 30%;
+      width: 25%;
       height: 100%;
       float: right;
       top: 0;
       bottom:0;
       overflow-x: hidden;
+      padding:1.5em;
+      letter-spacing: 0.5px;
   }
   #header {
     padding-top:0.5em;
     padding-bottom:0.5em;
-
+    width: 62%;
+    margin: 0 auto;
   }
   #markers {
     padding-left:1em;
-    padding-top:1em;
-    padding-bottom:1em;
+    padding-top:2em;
+    padding-bottom:2em;
     text-align:left;
+    font-weight:500;
   }
   #panel {
       position: absolute;
@@ -74,16 +79,17 @@
   }
 
   .rangeslider {
-    margin-top: 50px;
+    margin-top: 2em;
   }
 
   .logo-box {
-    border-width: 6px;
+    margin-top:1em;
+    border-width: 4px;
     border-style: solid;
     border-color: #fff;
     height: 60px;
     width: 280px;
-    margin-left: 40px;
+    margin-left: 3%;
     padding-bottom: 10px;
   }
 
@@ -92,6 +98,7 @@
     font-family: 'Crete Round', serif;
     font-size: 50px;
     color: #fff;
+    text-align: center;
   }
 
 </style>
@@ -115,6 +122,11 @@ request.onreadystatechange = function() {
     if (request.readyState == 4 && (request.status == 200)) {
         var data = JSON.parse(request.responseText);
         busData = data;
+        map = new google.maps.Map(document.getElementById("map-canvas"), {
+          center: new google.maps.LatLng(36.109805026680903, -115.174355506897),
+          zoom: 14,
+          mapTypeId: google.maps.MapTypeId.MAP
+        });
         for (var i=0; i < data.length - 1; i++) {
             var point = {};
             var coords = data[i]["coords"];
@@ -125,13 +137,23 @@ request.onreadystatechange = function() {
             }
             point["weight"] = weight;
             point["location"] = new google.maps.LatLng(coords[0], coords[1]);
+            if (weight > 5000) {
+
+              var contentString = data[i]["name"];
+              var infowindow = new google.maps.InfoWindow({
+                content: contentString
+              })
+              var marker = new google.maps.Marker({
+                position: new google.maps.LatLng(coords[0], coords[1]),
+                map: map,
+                title: data[i]["name"]
+              })  
+              google.maps.event.addListener(marker, 'click', function() {
+                infowindow.open(map,marker);
+              });
+            }
             heatmapData.push(point);
         }
-        map = new google.maps.Map(document.getElementById("map-canvas"), {
-          center: new google.maps.LatLng(36.109805026680903, -115.174355506897),
-          zoom: 14,
-          mapTypeId: google.maps.MapTypeId.MAP
-        });
         var heatmap = new google.maps.visualization.HeatmapLayer({
           data: heatmapData
         });
@@ -184,7 +206,7 @@ function showValue(newValue) {
       </div>
     </div>
     <div id="markers">
-      Filter markers by:
+      <b>Filter markers by:</b>
     </div>
 
     Day of the week:
@@ -200,7 +222,7 @@ function showValue(newValue) {
       </select>
     </div>
     <div class = "rangeslider">
-      <span class="range-select">Universal time selector:</span>
+      <span class="range-select">Universal time selector:</span><br>
       <input type="range" class = "fullwidth" min="0" max="23" value="12" step="1" onchange="showValue(this.value)" />
       <br>
       <span id="range">12</span>
