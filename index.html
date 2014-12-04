@@ -61,7 +61,10 @@
     overflow-x:hidden;
   }
   h1{font-size:21px;}
-
+  #content {
+    color: #000;
+    
+  }
   .styled-select select {
      width: 268px;
      padding: 5px;
@@ -139,7 +142,7 @@ request.onreadystatechange = function() {
             point["location"] = new google.maps.LatLng(coords[0], coords[1]);
             if (weight > 5000) {
 
-              var contentString = data[i]["name"];
+              var contentString =  '<div id="content">' + data[i]["name"] + '</div>';
               var infowindow = new google.maps.InfoWindow({
                 content: contentString
               })
