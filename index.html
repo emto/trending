@@ -9,6 +9,8 @@
 </script>
 <link href='http://fonts.googleapis.com/css?family=Crete+Round' rel='stylesheet' type='text/css'>
 <link href='http://fonts.googleapis.com/css?family=Roboto:300,500' rel='stylesheet' type='text/css'>
+<link href='style.css' rel='stylesheet' type='text/css'>
+
 <style>
   html, body, #map-canvas {
       height: 100%;
@@ -23,15 +25,17 @@
       text-align: center;
       font-size:18px;
       position: relative;
+      z-index:1;
       background-color: #439ed1;
-      width: 25%;
+      width: 350px;
       height: 100%;
       float: right;
-      top: 0;
-      bottom:0;
       overflow-x: hidden;
       padding:1.5em;
       letter-spacing: 0.5px;
+      -moz-box-shadow:    -1px 0 3px 1px #777;
+      -webkit-box-shadow: -1px 0 3px 1px #777;
+      box-shadow:         -1px 0 3px 1px #777;
   }
   #header {
     padding-top:0.5em;
@@ -46,24 +50,18 @@
     text-align:left;
     font-weight:500;
   }
-  #panel {
-      position: absolute;
-      top: 5px;
-      left: 50%;
-      margin-left: -180px;
-      z-index: 5;
-      background-color: #fff;
-      padding: 5px;
-      border: 1px solid #999;
-  }
   .relative{
     position:relative;
     overflow-x:hidden;
   }
-  h1{font-size:21px;}
   #content {
     color: #000;
-    
+    padding: 0.3em;
+    width: 250px;
+  }
+  .tags {
+    color: #999;
+    padding-bottom:1em;
   }
   .styled-select select {
      width: 268px;
@@ -75,16 +73,13 @@
      height: 40px;
      margin: 10px 0px;
   }
-
   .fullwidth {
     margin: 10px 0px;
     width: 70%;
   }
-
   .rangeslider {
     margin-top: 2em;
   }
-
   .logo-box {
     margin-top:1em;
     border-width: 4px;
@@ -92,18 +87,15 @@
     border-color: #fff;
     height: 60px;
     width: 280px;
-    margin-left: 3%;
+    margin-left: -35px;
     padding-bottom: 10px;
   }
-
   .logo-text {
-
     font-family: 'Crete Round', serif;
     font-size: 50px;
     color: #fff;
     text-align: center;
   }
-
 </style>
 
 <script>
@@ -130,6 +122,9 @@ request.onreadystatechange = function() {
           zoom: 14,
           mapTypeId: google.maps.MapTypeId.MAP
         });
+        // markerToContent example: Burger Bar -> "<div id="...</div>"
+        var markerToContent = {};
+        var lastOpenedWindow = null;
         for (var i=0; i < data.length - 1; i++) {
             var point = {};
             var coords = data[i]["coords"];
@@ -140,19 +135,34 @@ request.onreadystatechange = function() {
             }
             point["weight"] = weight;
             point["location"] = new google.maps.LatLng(coords[0], coords[1]);
-            if (weight > 5000) {
-
-              var contentString =  '<div id="content">' + data[i]["name"] + '</div>';
-              var infowindow = new google.maps.InfoWindow({
-                content: contentString
-              })
+            if (weight > 4500) {
               var marker = new google.maps.Marker({
                 position: new google.maps.LatLng(coords[0], coords[1]),
                 map: map,
                 title: data[i]["name"]
-              })  
+              });
+              var open;
+              var tags = '<div class="tags">';
+              if (!data[i]["open"]) {
+                open = '<h2 style="color:red;font-size:100%;"><b>CURRENTLY CLOSED</b></h2>'
+              } else {
+                open = '<h2 style="color:green;font-size:100%;"><b>OPEN NOW</b></h2>'
+              };
+              for (var j=0; j < data[i]["tags"].length - 1; j++) {
+                tags += '#' + data[i]["tags"][j].split(' ').join('') + '  '
+              }
+              tags += '</div>'
+              var contentString =  '<div id="content">' + '<b>' + data[i]["name"] + '</b><br>' + data[i]["addr"] + '<br>' + open + tags + 'Rating: ' + data[i]["stars"] + ' stars</div>';
+              markerToContent[marker.title] = contentString;
               google.maps.event.addListener(marker, 'click', function() {
-                infowindow.open(map,marker);
+                if (lastOpenedWindow != null) {
+                  lastOpenedWindow.close();
+                }
+                var infoWindow = new google.maps.InfoWindow({
+                  content: markerToContent[this.title]
+                });
+                lastOpenedWindow = infoWindow;
+                infoWindow.open(map,this);
               });
             }
             heatmapData.push(point);
@@ -166,7 +176,6 @@ request.onreadystatechange = function() {
         heatmap.set("maxIntensity", 10000);
     }
 }
-
 
 var request1 = new XMLHttpRequest();
 
@@ -182,24 +191,13 @@ request1.onreadystatechange = function() {
     }
 }
 
-
 function showValue(newValue) {
   document.getElementById("range").innerHTML=newValue;
   timeRange = newValue;
 }
-
-
-
 </script>
-
 </head>
 <body>
-<!-- <div id="panel">
-    <button onclick="toggleHeatmap()">Toggle Heatmap</button>
-    <button onclick="changeGradient()">Change gradient</button>
-    <button onclick="changeRadius()">Change radius</button>
-    <button onclick="changeOpacity()">Change opacity</button>
-</div> -->
 <div id="sidebar">
     <div id="header">
       <div class="logo-box">

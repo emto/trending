@@ -31,10 +31,15 @@ for (var i= 0; i < busString.length - 1; i++) {
     data["name"] = bus["name"];
     data["coords"] = [bus["latitude"], bus["longitude"]];
     data["stars"] = bus["stars"];
-    data["tags"] = bus["categories"];
+    data["open"] = bus["hours"];
+    data["tags"] = [];
+    for (var j=0; j < bus["categories"].length - 1; j++) {
+        data["tags"].push(bus["categories"][j].toLowerCase());
+    }
     data["addr"] = bus["full_address"];
     data["rvwCt"] = bus["review_count"];
     businesses[bus["business_id"]] = data;
+    // console.log(bus);
 }
 
 var busCheckData = [];

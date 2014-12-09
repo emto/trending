@@ -1,0 +1,91 @@
+
+  html, body, #map-canvas {
+      height: 100%;
+      margin: 0px;
+      padding: 0px;
+      overflow: hidden;
+      font-family: 'Roboto';
+      font-weight: 300;
+      color: #fff;
+  }
+  #sidebar {
+      text-align: center;
+      font-size:18px;
+      position: relative;
+      background-color: #439ed1;
+      width: 25%;
+      height: 100%;
+      float: right;
+      top: 0;
+      bottom:0;
+      overflow-x: hidden;
+      padding:1.5em;
+      letter-spacing: 0.5px;
+  }
+  #header {
+    padding-top:0.5em;
+    padding-bottom:0.5em;
+    width: 62%;
+    margin: 0 auto;
+  }
+  #markers {
+    padding-left:1em;
+    padding-top:2em;
+    padding-bottom:2em;
+    text-align:left;
+    font-weight:500;
+  }
+  #panel {
+      position: absolute;
+      top: 5px;
+      left: 50%;
+      margin-left: -180px;
+      z-index: 5;
+      background-color: #fff;
+      padding: 5px;
+      border: 1px solid #999;
+  }
+  .relative{
+    position:relative;
+    overflow-x:hidden;
+  }
+  h1 {
+    font-size:21px;
+  }
+  #content {
+    color: #000;
+  }
+  .styled-select select {
+     width: 268px;
+     padding: 5px;
+     font-size: 16px;
+     line-height: 1;
+     border: 0;
+     border-radius: 4px;
+     height: 40px;
+     margin: 10px 0px;
+  }
+  .fullwidth {
+    margin: 10px 0px;
+    width: 70%;
+  }
+  .rangeslider {
+    margin-top: 2em;
+  }
+  .logo-box {
+    margin-top:1em;
+    border-width: 4px;
+    border-style: solid;
+    border-color: #fff;
+    height: 60px;
+    width: 280px;
+    margin-left: 3%;
+    padding-bottom: 10px;
+  }
+
+  .logo-text {
+    font-family: 'Crete Round', serif;
+    font-size: 50px;
+    color: #fff;
+    text-align: center;
+  }
