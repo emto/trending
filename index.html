@@ -3,13 +3,11 @@
 <head>
 <meta charset="utf-8">
 <title>Trending</title>
-<script language="javascript" type="text/javascript" src="server.js"></script>
 <script type="text/javascript"
   src="https://maps.googleapis.com/maps/api/js?libraries=visualization&sensor=true_or_false">
 </script>
 <link href='http://fonts.googleapis.com/css?family=Crete+Round' rel='stylesheet' type='text/css'>
 <link href='http://fonts.googleapis.com/css?family=Roboto:300,500' rel='stylesheet' type='text/css'>
-<link href='style.css' rel='stylesheet' type='text/css'>
 
 <style>
   html, body, #map-canvas {
@@ -23,36 +21,44 @@
   }
   #sidebar {
       text-align: center;
-      font-size:18px;
+      font-size: 18px;
       position: relative;
-      z-index:1;
+      z-index: 1;
       background-color: #439ed1;
       width: 350px;
       height: 100%;
       float: right;
       overflow-x: hidden;
-      padding:1.5em;
+      padding: 1.5em;
       letter-spacing: 0.5px;
       -moz-box-shadow:    -1px 0 3px 1px #777;
       -webkit-box-shadow: -1px 0 3px 1px #777;
       box-shadow:         -1px 0 3px 1px #777;
   }
   #header {
-    padding-top:0.5em;
-    padding-bottom:0.5em;
+    padding-top: 0.5em;
+    padding-bottom: 0.5em;
     width: 62%;
     margin: 0 auto;
   }
-  #markers {
-    padding-left:1em;
-    padding-top:2em;
-    padding-bottom:2em;
-    text-align:left;
-    font-weight:500;
+  #titles {
+    padding-left: 1em;
+    padding-top: 2em;
+    padding-bottom: 2em;
+    text-align: left;
+    font-weight: 500;
   }
-  .relative{
-    position:relative;
-    overflow-x:hidden;
+  .relative {
+    position: relative;
+    overflow-x: hidden;
+  }
+  .left{
+    float: left;
+    margin-left: 18px;
+  }
+  .right {
+    float: right;
+    margin-right: 18px;
   }
   #content {
     color: #000;
@@ -61,7 +67,7 @@
   }
   .tags {
     color: #999;
-    padding-bottom:1em;
+    padding-bottom: 1em;
   }
   .styled-select select {
      width: 268px;
@@ -81,7 +87,7 @@
     margin-top: 2em;
   }
   .logo-box {
-    margin-top:1em;
+    margin-top: 1em;
     border-width: 4px;
     border-style: solid;
     border-color: #fff;
@@ -106,7 +112,7 @@ request.open("GET","/api/checkin/",true);
 request.send();
 
 var busData;
-// keys: name, addr, rvwCt, chkCt, hours, stars, tags, coords
+// keys: name, addr, rvwCt, chkCt, open, stars, tags, coords
 
 var heatmapData = [];
 var highestChkCt = 0;
@@ -281,10 +287,13 @@ function showValue(newValue) {
         </div>
       </div>
     </div>
-    <div id="markers">
-      <b>Filter markers by:</b>
+    <div id="titles"><b>Foot traffic</b></div>
+    <img src="http://i.imgur.com/8MkioOU.png" width="280px"><br>
+    <div class="left">Light</div>
+    <div class="right">Heavy</div><br>
+    <div id="titles">
+      <b>Filter data by:</b>
     </div>
-
     Day of the week:
     <div class="styled-select">
       <select id="dayOf" class="filterby" onchange="leaveChange()">
@@ -298,7 +307,7 @@ function showValue(newValue) {
       </select>
     </div>
     <div class = "rangeslider">
-      <span class="range-select">Universal time selector:</span><br>
+      <span class="range-select">Time of day (military time):</span><br>
       <input type="range" class = "fullwidth" min="0" max="23" value="12" step="1" onchange="showValue(this.value)" />
       <br>
       <span id="range">12</span>
