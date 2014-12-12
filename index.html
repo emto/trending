@@ -105,17 +105,17 @@ var request = new XMLHttpRequest();
 request.open("GET","/api/checkin/",true);
 request.send();
 
-var busData = [];
+var busData;
 // keys: name, addr, rvwCt, chkCt, hours, stars, tags, coords
 
 var heatmapData = [];
 var highestChkCt = 0;
 var mapCenter;
-var timeRange;
+var data;
 
 request.onreadystatechange = function() {
     if (request.readyState == 4 && (request.status == 200)) {
-        var data = JSON.parse(request.responseText);
+        data = JSON.parse(request.responseText);
         busData = data;
         map = new google.maps.Map(document.getElementById("map-canvas"), {
           center: new google.maps.LatLng(36.109805026680903, -115.174355506897),
@@ -177,23 +177,98 @@ request.onreadystatechange = function() {
     }
 }
 
-var request1 = new XMLHttpRequest();
+// var request1 = new XMLHttpRequest();
 
-request1.open("GET","/api/checktime/",true);
-request1.send();
+// request1.open("GET","/api/checktime/",true);
+// request1.send();
 
-var checkData;
+// var checkData;
 
-request1.onreadystatechange = function() {
-    if (request.readyState == 4 && (request.status == 200)) {
-        var data = JSON.parse(request.responseText);
-        checkData = data;
+// request1.onreadystatechange = function() {
+//     if (request.readyState == 4 && (request.status == 200)) {
+//         var data = JSON.parse(request.responseText);
+//         checkData = data;
+//     }
+// }
+
+var currDay = 1;
+var modData = [];
+var timeRange = 12;
+
+function mapChange() {
+  modData = [];
+  map = new google.maps.Map(document.getElementById("map-canvas"), {
+          center: new google.maps.LatLng(36.109805026680903, -115.174355506897),
+          zoom: 14,
+          mapTypeId: google.maps.MapTypeId.MAP
+        });
+
+  timeChange = timeRange + '-' + currDay.toString();
+  var markerToContent = {};
+  var lastOpenedWindow = null;
+  for (var i=0; i < data.length - 1; i++) {
+    if (data[i]["checkin"].hasOwnProperty(timeChange)) {
+      var point = {};
+      var coords = data[i]["coords"];
+      var weight = data[i]["checkin"][timeChange];
+      point["weight"] = weight;
+      point["location"] = new google.maps.LatLng(coords[0], coords[1]);
+      if (data[i]["checkin"][timeChange] > 50) {
+        var marker = new google.maps.Marker({
+          position: new google.maps.LatLng(coords[0], coords[1]),
+          map: map,
+          title: data[i]["name"]
+        });
+        var open;
+        var tags = '<div class="tags">';
+        if (!data[i]["open"]) {
+          open = '<h2 style="color:red;font-size:100%;"><b>CURRENTLY CLOSED</b></h2>'
+        } else {
+          open = '<h2 style="color:green;font-size:100%;"><b>OPEN NOW</b></h2>'
+        };
+        for (var j=0; j < data[i]["tags"].length - 1; j++) {
+          tags += '#' + data[i]["tags"][j].split(' ').join('') + '  '
+        }
+        tags += '</div>';
+        var contentString =  '<div id="content">' + '<b>' + data[i]["name"] + '</b><br>' + data[i]["addr"] + '<br>' + open + tags + 'Rating: ' + data[i]["stars"] + ' stars</div>';
+        markerToContent[marker.title] = contentString;
+        google.maps.event.addListener(marker, 'click', function() {
+          if (lastOpenedWindow != null) {
+            lastOpenedWindow.close();
+          }
+          var infoWindow = new google.maps.InfoWindow({
+            content: markerToContent[this.title]
+          });
+          lastOpenedWindow = infoWindow;
+          infoWindow.open(map,this);
+        });
+      }
+      modData.push(point);
     }
+  }
+
+
+  var heatmap = new google.maps.visualization.HeatmapLayer({
+        data: modData
+      });
+      heatmap.setMap(map);
+      heatmap.set("radius", 25);
+      heatmap.set("opacity", 0.7);
+      heatmap.set("maxIntensity", 100);
+
 }
+
+function leaveChange() {
+  currDay = document.getElementById("dayOf").value;
+  mapChange();
+}
+
 
 function showValue(newValue) {
   document.getElementById("range").innerHTML=newValue;
   timeRange = newValue;
+  mapChange();
+
 }
 </script>
 </head>
@@ -212,14 +287,14 @@ function showValue(newValue) {
 
     Day of the week:
     <div class="styled-select">
-      <select class="filterby">
-        <option value="1">Sunday</option>
-        <option value="2">Monday</option>
-        <option value="3">Tuesday</option>
-        <option value="4">Wednesday</option>
-        <option value="5">Thursday</option>
-        <option value="6">Friday</option>
-        <option value="7">Saturday</option>
+      <select id="dayOf" class="filterby" onchange="leaveChange()">
+        <option value="0">Sunday</option>
+        <option value="1">Monday</option>
+        <option value="2">Tuesday</option>
+        <option value="3">Wednesday</option>
+        <option value="4">Thursday</option>
+        <option value="5">Friday</option>
+        <option value="6">Saturday</option>
       </select>
     </div>
     <div class = "rangeslider">

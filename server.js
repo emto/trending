@@ -54,8 +54,10 @@ for (var i= 0; i < checkString.length - 1; i++) {
     }
     data = businesses[busID];
     data["chkCt"] = chkCt;
+    data["checkin"] = check["checkin_info"];
     busCheckData.push(data);
 }
+console.log(busCheckData[0]);
 
 var checkTime = [];
 for (var i= 0; i < checkString.length - 1; i++) {
