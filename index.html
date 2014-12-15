@@ -123,63 +123,64 @@ request.onreadystatechange = function() {
     if (request.readyState == 4 && (request.status == 200)) {
         data = JSON.parse(request.responseText);
         busData = data;
-        map = new google.maps.Map(document.getElementById("map-canvas"), {
-          center: new google.maps.LatLng(36.109805026680903, -115.174355506897),
-          zoom: 14,
-          mapTypeId: google.maps.MapTypeId.MAP
-        });
-        // markerToContent example: Burger Bar -> "<div id="...</div>"
-        var markerToContent = {};
-        var lastOpenedWindow = null;
-        for (var i=0; i < data.length - 1; i++) {
-            var point = {};
-            var coords = data[i]["coords"];
-            var weight = data[i]["chkCt"] + data[i]["rvwCt"];
-            if (weight > highestChkCt) {
-                highestChkCt = weight;
-                mapCenter = coords;
-            }
-            point["weight"] = weight;
-            point["location"] = new google.maps.LatLng(coords[0], coords[1]);
-            if (weight > 4500) {
-              var marker = new google.maps.Marker({
-                position: new google.maps.LatLng(coords[0], coords[1]),
-                map: map,
-                title: data[i]["name"]
-              });
-              var open;
-              var tags = '<div class="tags">';
-              if (!data[i]["open"]) {
-                open = '<h2 style="color:red;font-size:100%;"><b>CURRENTLY CLOSED</b></h2>'
-              } else {
-                open = '<h2 style="color:green;font-size:100%;"><b>OPEN NOW</b></h2>'
-              };
-              for (var j=0; j < data[i]["tags"].length - 1; j++) {
-                tags += '#' + data[i]["tags"][j].split(' ').join('') + '  '
-              }
-              tags += '</div>'
-              var contentString =  '<div id="content">' + '<b>' + data[i]["name"] + '</b><br>' + data[i]["addr"] + '<br>' + open + tags + 'Rating: ' + data[i]["stars"] + ' stars</div>';
-              markerToContent[marker.title] = contentString;
-              google.maps.event.addListener(marker, 'click', function() {
-                if (lastOpenedWindow != null) {
-                  lastOpenedWindow.close();
-                }
-                var infoWindow = new google.maps.InfoWindow({
-                  content: markerToContent[this.title]
-                });
-                lastOpenedWindow = infoWindow;
-                infoWindow.open(map,this);
-              });
-            }
-            heatmapData.push(point);
-        }
-        var heatmap = new google.maps.visualization.HeatmapLayer({
-          data: heatmapData
-        });
-        heatmap.setMap(map);
-        heatmap.set("radius", 25);
-        heatmap.set("opacity", 0.7);
-        heatmap.set("maxIntensity", 10000);
+        mapChange();
+        // map = new google.maps.Map(document.getElementById("map-canvas"), {
+        //   center: new google.maps.LatLng(36.109805026680903, -115.174355506897),
+        //   zoom: 14,
+        //   mapTypeId: google.maps.MapTypeId.MAP
+        // });
+        // // markerToContent example: Burger Bar -> "<div id="...</div>"
+        // var markerToContent = {};
+        // var lastOpenedWindow = null;
+        // for (var i=0; i < data.length - 1; i++) {
+        //     var point = {};
+        //     var coords = data[i]["coords"];
+        //     var weight = data[i]["chkCt"] + data[i]["rvwCt"];
+        //     if (weight > highestChkCt) {
+        //         highestChkCt = weight;
+        //         mapCenter = coords;
+        //     }
+        //     point["weight"] = weight;
+        //     point["location"] = new google.maps.LatLng(coords[0], coords[1]);
+        //     if (weight > 4500) {
+        //       var marker = new google.maps.Marker({
+        //         position: new google.maps.LatLng(coords[0], coords[1]),
+        //         map: map,
+        //         title: data[i]["name"]
+        //       });
+        //       var open;
+        //       var tags = '<div class="tags">';
+        //       if (!data[i]["open"]) {
+        //         open = '<h2 style="color:red;font-size:100%;"><b>CURRENTLY CLOSED</b></h2>'
+        //       } else {
+        //         open = '<h2 style="color:green;font-size:100%;"><b>OPEN NOW</b></h2>'
+        //       };
+        //       for (var j=0; j < data[i]["tags"].length - 1; j++) {
+        //         tags += '#' + data[i]["tags"][j].split(' ').join('') + '  '
+        //       }
+        //       tags += '</div>'
+        //       var contentString =  '<div id="content">' + '<b>' + data[i]["name"] + '</b><br>' + data[i]["addr"] + '<br>' + open + tags + 'Rating: ' + data[i]["stars"] + ' stars</div>';
+        //       markerToContent[marker.title] = contentString;
+        //       google.maps.event.addListener(marker, 'click', function() {
+        //         if (lastOpenedWindow != null) {
+        //           lastOpenedWindow.close();
+        //         }
+        //         var infoWindow = new google.maps.InfoWindow({
+        //           content: markerToContent[this.title]
+        //         });
+        //         lastOpenedWindow = infoWindow;
+        //         infoWindow.open(map,this);
+        //       });
+        //     }
+        //     heatmapData.push(point);
+        // }
+        // var heatmap = new google.maps.visualization.HeatmapLayer({
+        //   data: heatmapData
+        // });
+        // heatmap.setMap(map);
+        // heatmap.set("radius", 25);
+        // heatmap.set("opacity", 0.7);
+        // heatmap.set("maxIntensity", 10000);
     }
 }
 
