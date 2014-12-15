@@ -73,7 +73,7 @@ for (var i= 0; i < checkString.length - 1; i++) {
 
 
 // Port
-var port = 8888;
+var port = process.env.PORT || 8888;
 
 
 // Static files
